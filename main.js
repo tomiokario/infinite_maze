@@ -1,186 +1,68 @@
-/* infinite maze */
+/*
+ * 迷路を解くゲーム
+ */
 
-// import
-phina.globalize(); // おまじない(phina.jsをグローバルに展開)
+phina.globalize(); // phina.jsを使用する(グローバルに展開)
+
 
 // 定数
-const RECTANGLE_DIAMETER = 60; // 正方形の一辺の長さ
-const DISPLAY_WIDTH = 640;     // ゲーム画面の横幅
-const DISPLAY_HEIGHT = 960;    // ゲーム画面の縦幅
-const ONE_SECOND_FPS = 30;     //ゲーム画面を、一秒間に何回更新するか
+const WALL_SIZE = 40; // 正方形の一辺の長さ
+const DISPLAY_WIDTH = 640; // ゲーム画面の横幅
+const DISPLAY_HEIGHT = 960; // ゲーム画面の縦幅
+const ONE_SECOND_FPS = 30; //ゲーム画面を、一秒間に何回更新するか
 
-var SCORE = 0;     //スコアはグローバルで管理する
-var SPEED_X = 25;
-var SPEED_Y = 3
+// グローバル変数
+var maze;           // 迷路生成用配列
+var start_points_x = new Array();   // 穴掘り開始地点候補の配列
+var start_points_y = new Array();   // 穴掘り開始地点候補の配列
+var maze_count = 0;
 
-/*
- * 四角の定義
- */
-phina.define('Rec', {
-    superClass: 'CircleShape',
-
-    //初期化
-    init: function(options) {
-        this.superInit(); //初期化のおまじない
-
-        this.color = getRandomInt(4); // カラーコード
-        if(this.color==0){
-            this.fill = 'red'; // 四角の塗りつぶし色
-            this.stroke = 'red'; // 四角のふちの色
-        }
-        else if(this.color==1){
-            this.fill = 'blue'; // 四角の塗りつぶし色
-            this.stroke = 'blue'; // 四角のふちの色
-        }
-        else if(this.color==2){
-            this.fill = 'green'; // 四角の塗りつぶし色
-            this.stroke = 'green'; // 四角のふちの色
-        }
-        else{
-            this.fill = 'darkblue'; // 四角の塗りつぶし色
-            this.stroke = 'darkblue'; // 四角のふちの色
-        }
-
-        this.width = RECTANGLE_DIAMETER; //四角の縦幅
-        this.height = RECTANGLE_DIAMETER; //四角の横幅
-
-        //オブジェクトをクリックできるようにする
-        this.setInteractive(true); //四角をクリック可能に
-        this.onpointstart = () => { //クリックが始まった瞬間の処理
-            SCORE += 1; //スコアを1追加
-            this.remove(); //自身を削除
-        };
-        this.down_flag = Boolean("true");
-        this.right_flag = Boolean("true");
-        this.speed_x = getRandomInt(40);
-        this.speed_y = getRandomInt(40);
-    },
-
-
-    // update関数(毎フレームごとに、どうふるまうか)
-    update: function(app) {
-
-        if(this.right_flag){
-            this.x += this.speed_x;
-        }
-        else{
-            this.x -= this.speed_x;
-        }
-
-        if(this.x < 0){
-            this.right_flag = 1;
-        }
-
-        if(this.x > DISPLAY_WIDTH){
-            this.right_flag = 0 ;
-        }
-
-        if(this.down_flag){
-            this.y += this.speed_y;
-            console.log(this.down_flag);
-        }
-        else{
-            this.y -= this.speed_y;
-            console.log("up");
-
-        }
-
-        if(this.y < 0){
-            this.down_flag = 1;
-        }
-
-        if(this.y > DISPLAY_HEIGHT){
-            this.down_flag = 0;
-        }
-
-    },
-});
-
-
-
-/*
- * スコア表示用Labalの定義
- */
-phina.define('scoreLabel', {
-    superClass: 'Label',
-
-    //初期化
-    init: function(options) {
-        this.superInit(); //初期化のおまじない
-
-        this.text = "0"; //最初のtextは 0
-        this.fontsize = 64; //フォントの大きさ
-        this.x = DISPLAY_WIDTH / 2; //表示位置(x座標)
-        this.y = DISPLAY_HEIGHT - (DISPLAY_HEIGHT / 9); //表示位置(y座標)
-        this.fill = '#111'; //文字の色
-    },
-
-
-    //毎フレームごとに、どうふるまうか
-    update: function(app) {
-        this.text = SCORE; //textに現在のSCOREを代入
-    }
-});
-
-
-
-/*
- * ゲームのメインシーンの定義
- *      phina.jsは，シーンを作って，シーンの中で任意のオブジェクトを動かす
- *          タイトルシーン，メイン画面など，画面遷移をしたい
- */
-phina.define("MainScene", {
-    superClass: 'DisplayScene',
-
-    // 初期化
-    init: function() {
-        this.superInit(); //初期化のおまじない
-
-        this.backgroundColor = '#1ee'; // 背景色
-
-        //score表示用Labelを、シーンに追加
-        scoreLabel({}).addChildTo(this);
-
-        // グループを生成
-        this.recGroup = DisplayElement().addChildTo(this);
-    },
-
-
-    //毎フレームごとに、どう振る舞うか
-    update: function(app) {
-        if (app.frame % ONE_SECOND_FPS == 0) { //1秒に一回、四角を追加する
-
-            var tempRec = Rec({}); //tempRecに四角を一旦代入し、初期値を設定する
-            tempRec.x = getRandomInt(DISPLAY_WIDTH); //表示位置(x座標)を画面内でランダムに設定する
-            tempRec.y = getRandomInt(DISPLAY_HEIGHT); //表示位置(y座標)を画面内でランダムに設定する
-
-            tempRec.addChildTo(this.recGroup); //グループに追加する
-        }
-    },
-
-    onkeydown: function(e) { //スペースキーが押されると、強制終了
-        if (e.keyCode === 32) { //32がスペースキー
-            this.app.stop();
-        }
-    },
-});
 
 
 /*
  * メイン処理
  */
 phina.main(function() {
-    // アプリケーションを生成
+    // アプリケーション生成
     var app = GameApp({
-        startLabel: 'main', // MainScene から開始
+        // シーン選択(mainから開始)
+        startLabel: 'start',
+        // 画面設定
         width: DISPLAY_WIDTH, //画面の横幅
         height: DISPLAY_HEIGHT, //画面の縦幅
         fps: ONE_SECOND_FPS, //毎秒何回画面を更新するかの設定。
+
+        scenes: [
+            {
+                className: 'StartScene',
+                label: 'start',
+                nextLabel: 'main',
+            },
+
+            {
+                className: 'MainScene',
+                label: 'main',
+                nextLabel: 'goal',
+            },
+            {
+                className: 'GoalScene',
+                label: 'goal',
+                nextLabel: 'main',
+            },
+            {
+                className: 'GameOverScene',
+                label: 'gameover',
+                nextLabel: 'start',
+            },
+
+        ],
     });
 
-    // 実行
+    // アプリケーション実行
     app.run();
 });
+
+
 
 
 // ランダムなint型の数を返す関数
@@ -188,3 +70,4 @@ phina.main(function() {
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
+
