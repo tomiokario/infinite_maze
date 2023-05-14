@@ -3,16 +3,17 @@
  */
 
 var comment_list = [ 
-                "スライムにぶつかると食べられます．",
-                "shitキーでダッシュできます．",
-                "スライムは8秒に一回分裂します．",
-                "スライムは分裂前に赤く光ります．",
-                "スライムは分裂前に減速します．",
-                "上階層ほどスライムは増えやすくなります．",
-                "上階層のスライムは少し素早く動きます．",
-                "wasdキーでも操作できます．",
-                "Enterキーで次の画面に進むことができます．",
-                "迷路は毎回ランダムに生成されます．"
+                "スライムにぶつかると食べられます",
+                "shitキーでダッシュできます",
+                "スライムは8秒に一回分裂します",
+                "スライムは分裂前に赤く光ります",
+                "スライムは分裂前に減速します",
+                "上階層ほどスライムは増えやすくなります",
+                "上階層のスライムは少し素早く動きます",
+                "wasdキーでも操作できます",
+                "Enterキーで次の画面に進むことができます",
+                "迷路は毎回ランダムに生成されます",
+                "スライムはクリック/タップされると減速します"
               ];
 
 /*
@@ -34,12 +35,12 @@ phina.define("StartScene", {
             fill: 'white',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() - 70);
         Label({
-            text: '敵を避けて，右下のゴールを目指します．',
+            text: '敵を避けて、右下のゴールを目指します',
             fontSize: 30,
             fill: 'white',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() + 55);
         Label({
-            text: 'タッチ，矢印キーで操作できます．',
+            text: 'タッチ、矢印キーで操作できます',
             fontSize: 30,
             fill: 'white',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() + 55 + 45);
@@ -79,7 +80,7 @@ phina.define("GoalScene", {
         this.backgroundColor = 'maroon';
         // ラベル
         Label({
-            text: maze_count+"つの迷路をクリアしました．",
+            text: maze_count+"個の迷路をクリアしました",
             fontSize: 40,
             fill: 'white',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() - 70);
@@ -129,7 +130,7 @@ phina.define("GameOverScene", {
             fill: 'purple',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() - 70);
         Label({
-            text: maze_count+"つの迷路をクリアしました．",
+            text: maze_count+"個の迷路をクリアしました．",
             fontSize: 35,
             fill: 'white',
         }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center() +50);

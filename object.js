@@ -35,7 +35,6 @@ phina.define('Wall', {
 phina.define('Hero', {
     superClass: 'RectangleShape',
 
-
     //初期化
     init: function(options) {
         this.superInit(); //初期化のおまじない
@@ -45,14 +44,11 @@ phina.define('Hero', {
 
         this.width = WALL_SIZE / 2 - 3; //四角の縦幅
         this.height = WALL_SIZE /2 - 3; //四角の横幅
-        
     },
-
 
     // アップデート
     update: function(app) {
     },
-
 });
 
 
@@ -63,24 +59,20 @@ phina.define('Hero', {
 phina.define('Point', {
     superClass: 'RectangleShape',
 
-
     //初期化
     init: function(options) {
-        this.superInit(); //初期化のおまじない
+        this.superInit(); //初期化
 
         this.fill = 'teal'; // 四角の塗りつぶし色
         this.stroke = 'yellow'; // 四角のふちの色
 
         this.width = WALL_SIZE / 2; //四角の縦幅
         this.height = WALL_SIZE /2; //四角の横幅
-        
     },
-
 
     // アップデート
     update: function(app) {
     },
-
 });
 
 
@@ -90,7 +82,6 @@ phina.define('Point', {
  */
 phina.define('Enemy', {
     superClass: 'CircleShape',
-
 
     //初期化
     init: function(options) {
@@ -103,14 +94,12 @@ phina.define('Enemy', {
         this.shadow = 'white';    // 影
         this.shadowBlur = WALL_SIZE;
 
-
-
-        //オブジェクトをクリックできるようにする
-        this.setInteractive(true); //四角をクリック可能に
-        this.onpointstart = () => { //クリックが始まった瞬間の処理
+        // クリック時の処理
+        this.setInteractive(true);    // クリック可能にする
+        this.onpointstart = () => {   //クリックが始まった瞬間の処理
             // this.remove(); //自身を削除
-            this.speed_x=0;
-            this.speed_y=0;
+            this.speed_x=this.speed_x/2;
+            this.speed_y=this.speed_y/2;
         };
         this.x = getRandomInt(DISPLAY_WIDTH);
         this.y = getRandomInt(DISPLAY_HEIGHT);
@@ -125,7 +114,6 @@ phina.define('Enemy', {
             this.speed_y = getRandomInt(maze_count/2) + 1;
         }
     },
-
 
     // update関数(毎フレームごとに、どうふるまうか)
     update: function(app) {
