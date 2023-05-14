@@ -1,17 +1,15 @@
-/*
- * シンプルに四角が動く、ゲーム(?)
- */
+/* infinite maze */
 
+// import
 phina.globalize(); // おまじない(phina.jsをグローバルに展開)
-
 
 // 定数
 const RECTANGLE_DIAMETER = 60; // 正方形の一辺の長さ
-const DISPLAY_WIDTH = 640; // ゲーム画面の横幅
-const DISPLAY_HEIGHT = 960; // ゲーム画面の縦幅
-const ONE_SECOND_FPS = 30; //ゲーム画面を、一秒間に何回更新するか
+const DISPLAY_WIDTH = 640;     // ゲーム画面の横幅
+const DISPLAY_HEIGHT = 960;    // ゲーム画面の縦幅
+const ONE_SECOND_FPS = 30;     //ゲーム画面を、一秒間に何回更新するか
 
-var SCORE = 0; //スコアはグローバルで管理する(その方が簡単なので…)
+var SCORE = 0;     //スコアはグローバルで管理する
 var SPEED_X = 25;
 var SPEED_Y = 3
 
@@ -20,7 +18,6 @@ var SPEED_Y = 3
  */
 phina.define('Rec', {
     superClass: 'CircleShape',
-
 
     //初期化
     init: function(options) {
@@ -127,9 +124,6 @@ phina.define('scoreLabel', {
 
 
 
-
-
-
 /*
  * ゲームのメインシーンの定義
  *      phina.jsは，シーンを作って，シーンの中で任意のオブジェクトを動かす
@@ -172,68 +166,6 @@ phina.define("MainScene", {
 });
 
 
-
-/*
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // ボール
-    var ball = CircleShape().addChildTo(this);
-    ball.setPosition(0, this.gridY.center());
-    // 速度設定、この時点でPhsicalクラスが適用される
-    ball.physical.force(8, -4);
-    // 重力
-    ball.physical.gravity.set(0, 9.8 / 10);
-    // 反射力（独自実装）
-    ball.vy = -10;
-    // 床
-    var floor = RectangleShape({width: this.gridX.width}).addChildTo(this);
-    floor.setPosition(this.gridX.center(), this.gridY.width);
-    // 参照用
-    this.ball = ball;
-    this.floor = floor;
-  },
-  // 毎フレーム処理
-  update: function() {
-    // ボールが床に着いたら
-    if (this.ball.hitTestElement(this.floor)) {
-      // x方向の速度はキープして反射力をあてる
-      var vx = this.ball.physical.velocity.x;
-      this.ball.physical.force(vx, this.ball.vy);
-      // めり込み防止
-      this.ball.bottom = this.floor.top;
-      // 摩擦
-      this.ball.physical.friction = 0.97;
-      // 反射力を減らす
-      if (this.ball.vy < 0) this.ball.vy += 2;
-    }  
-  },
-});
-
-
-
-
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * メイン処理
  */
@@ -249,10 +181,6 @@ phina.main(function() {
     // 実行
     app.run();
 });
-
-
-
-
 
 
 // ランダムなint型の数を返す関数
